@@ -31,7 +31,8 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Buat endpoint POST untuk memproses video
-app.post('/api/generate-video', upload.single('photo'), async (req, res) => {
+// Jalur telah disederhanakan menjadi '/' karena Vercel sudah menangani '/api/generate-video'
+app.post('/', upload.single('photo'), async (req, res) => {
   try {
     // 1. Validasi input
     if (!req.file) {
