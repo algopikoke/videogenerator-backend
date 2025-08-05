@@ -8,16 +8,16 @@ const multer = require('multer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch'); // node-fetch diperlukan untuk beberapa versi Node.js
+const fetch = require('node-fetch');
 
 // Konfigurasi Multer untuk mengelola unggahan file
-const upload = multer({ dest: '/tmp/' }); // Vercel hanya mengizinkan penulisan ke folder /tmp
+const upload = multer({ dest: '/tmp/' });
 
 // Inisialisasi Express app
 const app = express();
 
 // Middleware untuk mengaktifkan CORS (Cross-Origin Resource Sharing)
-// Ini penting agar frontend Anda bisa berkomunikasi dengan backend Vercel.
+// Mengatur CORS agar menerima permintaan dari mana saja ('*')
 app.use(cors());
 
 // ========================================================================
@@ -31,7 +31,7 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Buat endpoint POST untuk memproses video
-app.post('/', upload.single('photo'), async (req, res) => {
+app.post('/api/generate-video', upload.single('photo'), async (req, res) => {
   try {
     // 1. Validasi input
     if (!req.file) {
@@ -103,8 +103,6 @@ app.post('/', upload.single('photo'), async (req, res) => {
     const { title, description, tags } = JSON.parse(jsonText);
 
     // 3. (SIMULASI) Pemrosesan video menggunakan FFmpeg
-    // Di lingkungan serverless, Anda akan menjalankan proses ini
-    // sebagai bagian dari fungsi ini.
     console.log('Simulasi pemrosesan video selesai.');
 
     // 4. Kirim hasil ke Telegram Bot API
@@ -144,8 +142,4 @@ app.post('/', upload.single('photo'), async (req, res) => {
   }
 });
 
-// Vercel mengekspor handler sebagai fungsi.
-// Anda dapat mengonfigurasi ini di vercel.json.
-// Cara paling sederhana, ekspos app sebagai handler.
-// app.all('*', (req, res) => handler(req, res));
 module.exports = app;
